@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+#make_minimum_required(VERSION 3.0.2)
 project(team_c_final)
 
 ## Compile as C++11, supported in ROS Kinetic and newer

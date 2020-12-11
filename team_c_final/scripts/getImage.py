@@ -1,19 +1,71 @@
 #!/usr/bin/env python
 import rospy
 import numpy as np
-from sensor_msgs.msg import Image
 from PIL import Image as image
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+import numpy
+import tf
+from sensor_msgs.msg import Image
+from sensor_msgs.msg import CameraInfo
+import sys
 
+def callbackColor(msg):
+  #convert ROS image to CV image
+  im = np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1) 
+  img = image.fromarray(im, 'RGB')
+  
+  hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+  
+  #color thresholds
+  lower_red = numpy.array([255, 85, 0])
+  upper_red = numpy.array([100, 0, 0])
+  
+  lower_green = numpy.array([180, 255, 0])
+  upper_green = numpy.array([0, 60, 0])
+  
+  lower_blue = numpy.array([0, 115, 255])
+  upper_blue = numpy.array([0, 0, 70])
+  
+  maskRed = cv2.inRange(hsv, lower_red, upper_red)
+  maskGreen = cv2.inRange(hsv, lower_green, upper_green)
+  maskBlue = cv2.inRange(hsv, lower_blue, upper_blue)
+
+  cv2.morphologyEx(maskRed, cv2.MORPH_CLOSE, numpy.ones((11,11)))
+  cv2.morphologyEx(maskGreen, cv2.MORPH_CLOSE, numpy.ones((11,11)))
+  cv2.morphologyEx(maskBlue, cv2.MORPH_CLOSE, numpy.ones((11,11)))
+    
+  contoursRed, hierarchyRed = cv2.findContours(maskRed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+  contoursGreen, hierarchyGreen = cv2.findContours(maskRGreen, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+  contoursBlue, hierarchyBlue = cv2.findContours(maskBlue, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+  self.contourLength = len(contoursRed)
+  
+  #check if color found in image
+  #check red
+  if self.contourLength > 1:
+    print("red")
+    return red
+  self.contourLength = len(contoursGreen)
+  
+  #check green
+  if self.contourLength > 1:
+    print("green")
+    return green
+  self.contourLength = len(contoursBlue)
+  
+  #check blue
+  if self.contourLength > 1:
+    print("blue")
+    return blue
+  sys.exit("No colors found.")
+  
 def main():
   #script gets a single image from topic and displays it fro image manipulation
   rospy.init_node('image', anonymous=True) 
   
-  msg = rospy.wait_for_message("/realsense/color/image_raw", Image)
-  print(msg)
-  im = np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1) 
-  img = image.fromarray(im, 'RGB')
-  img.save('my.png')
-  img.show()
+  rospy.Subscriber("/realsense/color/image_raw", Image, callbackColor)
+  rospy.spin()
 
 if __name__=="__main__":
   try:
