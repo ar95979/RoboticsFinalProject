@@ -1,0 +1,15 @@
+material wall5/Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture wall5.png
+        filtering anistropic
+        max_anisotropy 16
+      }
+    }
+  }
+}

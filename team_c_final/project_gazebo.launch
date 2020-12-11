@@ -1,0 +1,18 @@
+<launch>
+  <env name="GAZEBO_MODEL_PATH" value="$(find team_c_final)/worlds"/>
+  <env name="HUSKY_GAZEBO_DESCRIPTION" value="$(find husky_gazebo)/urdf/description.gazebo.xacro"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find team_c_final)/worlds/Boydworld.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+  <arg name="laser_enabled" default="true"/>
+  <arg name="realsense_enabled" default="true"/>
+  <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+    <arg name="laser_enabled" value="$(arg laser_enabled)"/>
+    <arg name="realsense_enabled" value="$(arg realsense_enabled)"/>
+  </include>
+</launch>
