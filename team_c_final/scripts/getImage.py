@@ -48,19 +48,24 @@ def callbackColor(msg):
   #check red
   if contourLength > 1:
     print("red")
-    color = red
+    color = 3
+
   contourLength = len(contoursGreen)
   
   #check green
   if contourLength > 1:
     print("green")
-    color = green
+    color = 2
+
   contourLength = len(contoursBlue)
   
   #check blue
   if contourLength > 1:
     print("blue")
-    color = blue
+    color = 1
+  else:
+    print("no color")
+    color = 0
   
 def main():
   #script gets a single image from topic and displays it fro image manipulation
