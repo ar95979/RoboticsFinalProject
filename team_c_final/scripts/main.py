@@ -66,6 +66,12 @@ def main():
         else:
             print("wrong colour, keep looking")
 
+    #at the end of the while loop the coordinates have changed back to the origin coordinates
+    print("Moving back to: (%.2f, %.2f)" % (coorX, coorY))
+    #########
+    #Farah's script to move to waypoint 2,2
+    #########
+
 if __name__=="__main__":
     try:
         main()
