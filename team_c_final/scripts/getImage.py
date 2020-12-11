@@ -10,6 +10,9 @@ from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
 import sys
 
+color = "null"
+contourLength = 0
+
 def callbackColor(msg):
   #convert ROS image to CV image
   im = np.frombuffer(msg.data, dtype=np.uint8).reshape(msg.height, msg.width, -1) 
@@ -35,30 +38,29 @@ def callbackColor(msg):
   cv2.morphologyEx(maskGreen, cv2.MORPH_CLOSE, numpy.ones((11,11)))
   cv2.morphologyEx(maskBlue, cv2.MORPH_CLOSE, numpy.ones((11,11)))
     
-  contoursRed, hierarchyRed = cv2.findContours(maskRed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-  contoursGreen, hierarchyGreen = cv2.findContours(maskRGreen, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-  contoursBlue, hierarchyBlue = cv2.findContours(maskBlue, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+  contoursRed = cv2.findContours(maskRed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+  contoursGreen = cv2.findContours(maskGreen, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+  contoursBlue = cv2.findContours(maskBlue, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-  self.contourLength = len(contoursRed)
+  contourLength = len(contoursRed)
   
   #check if color found in image
   #check red
-  if self.contourLength > 1:
+  if contourLength > 1:
     print("red")
-    return red
-  self.contourLength = len(contoursGreen)
+    color = red
+  contourLength = len(contoursGreen)
   
   #check green
-  if self.contourLength > 1:
+  if contourLength > 1:
     print("green")
-    return green
-  self.contourLength = len(contoursBlue)
+    color = green
+  contourLength = len(contoursBlue)
   
   #check blue
-  if self.contourLength > 1:
+  if contourLength > 1:
     print("blue")
-    return blue
-  sys.exit("No colors found.")
+    color = blue
   
 def main():
   #script gets a single image from topic and displays it fro image manipulation
